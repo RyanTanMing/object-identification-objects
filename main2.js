@@ -1,4 +1,5 @@
 status=""
+objects=[]
 function setup() {
     canvas=createCanvas(550,550)
 canvas.center()
@@ -28,17 +29,51 @@ else if (page=="book") {
 else if (page=="door") {
     image(img4,0,0,550,550)
 }
+if (status!="") {
+    for (let index = 0; index < objects.length; index++) {
+       document.getElementById('status').innerHTML="object detected "+objects.length
+       fill("red")
+       p=floor(objects[index].confidence*100)
+       text(objects[index].label+" "+p+"%",objects[index].x,objects[index].y)
+       noFill()
+       stroke("red")
+       rect(objects[index].x,objects[index].y,objects[index].width,objects[index].height)
+
+    }
+}
 }
 function modelloaded(){
     console.log("model loaded")
     status=true
+    if (page=="bedroom") {
+        img=img
+    }
+    else if (page=="livingroom") {
+        img=img1
+    }
+    else if (page=="bottles") {
+        img=img2
+    }
+    else if (page=="book") {
+        img=img3
+    }
+    else if (page=="door") {
+        img=img4
+    }
     objectdetect.detect(img,gotresult)
+
 }
+
+
+
+
+
 function gotresult(error,results) {
     if (error==true) {
         console.error(error)
     }
     else{
         console.log(results)
+        objects=results
     }
 }
